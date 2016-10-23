@@ -29,28 +29,61 @@ const argv = require('yargs')
 
 const host = argv._[0] || 'localhost';
 const port = argv.p;
-const url = 'http://' + host + ':' + port;
+const baseUrl = 'http://' + host + ':' + port;
 
 const endpoints = {
   'Nodes': '/txt/nodes',
   'Workers': '/txt/workers',
   'Slicers': '/txt/slicers',
-  'Jobs': '/txt/slicers',
-  'Execution Contexts': '/txt/nodes',
+  'Jobs': '/txt/jobs',
+  'Execution Contexts': '/txt/ex',
 };
 
-console.log('Teraslice master: %s:%s', host, port);
-console.log('Timeoute');
-console.log(url + endpoints['Nodes']);
-console.log(endpoints);
+// console.log('Teraslice master: %s:%s', host, port);
+// console.log('Timeoute');
+console.log(baseUrl + endpoints['Nodes']);
+// console.log(endpoints);
 
-process.stdout.write(
-  '\nNodes \n\
------\n\n'
-);
+/**
+ * Generates a Header
+ * @param {string} title Short string representing title of section header.
+ * @return {string} s The formatted string to be printed to title.
+ */
+function makeHeader(title) {
+  return '--------------------------------------------------------------------------------\n' +
+         '  ' + title + '\n' +
+         '--------------------------------------------------------------------------------\n\n';
+}
 
-request(url + endpoints['Nodes'], function(error, response, body) {
-  if (!error && response.statusCode == 200) {
-    console.log(body);
+
+console.log(Object.keys(endpoints));
+
+for (let endpoint in endpoints) {
+  if (endpoints.hasOwnProperty(endpoint)) {
+    process.stdout.write(makeHeader(endpoint));
+    let url = baseUrl + endpoints[endpoint];
+    process.stdout.write(url + '\n');
+    console.log(getEndpoint(url));
   }
-});
+}
+
+/**
+ * Retrieves data from the specified endpoint API URL
+ * @param  {string} url One of the valid endpoint urls
+ * @return {string} s String with the values returned by the API
+ */
+function getEndpoint(url) {
+  let newUrl = url + '?size=10';  // restrict response to 10
+  let r = undefined;
+  console.log(newUrl);
+  request(newUrl, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      r = body;
+    } else {
+      console.log(error);
+      r = '';
+    }
+  });
+  return r;
+};

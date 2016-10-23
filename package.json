@@ -1,0 +1,35 @@
+{
+  "name": "teraslice-top",
+  "version": "0.1.0",
+  "description": "Teraslice Cluster Activity Monitoring Tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "docs": "jsdoc .; open out/index.html",
+    "clean": "rm -rf out"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/godber/teraslice-top"
+  },
+  "keywords": [
+    "teraslice"
+  ],
+  "author": "Austin Godber",
+  "license": "BSD-2-Clause",
+  "bin": {
+    "tstop": "index.js"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "request": "^2.75.0",
+    "yargs": "^6.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.8.1",
+    "eslint-config-google": "^0.7.0",
+    "jsdoc": "^3.4.2",
+    "jshint": "^2.9.4"
+  }
+}
