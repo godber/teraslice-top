@@ -34,7 +34,7 @@ const host = argv._[0] || 'localhost';
 const port = argv.p;
 const baseUrl = 'http://' + host + ':' + port;
 
-let requestInterval = argv.t * 2000;
+let requestInterval = argv.t * 1000;  // convert seconds to ms
 
 const sections = {
   'Nodes': {
@@ -125,6 +125,7 @@ function setValue(error, section, body) {
   } else {
     sections[section].value = body;
   }
+  drawScreen();
 };
 
 // Hit all of the endpoints at the requested interval
@@ -136,7 +137,3 @@ for (let section in sections) {
     }, requestInterval);   // hit endpoints at interval
   }
 }
-
-jetty.clear();
-drawScreen();
-setInterval(drawScreen, 2000);
