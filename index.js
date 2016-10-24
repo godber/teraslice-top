@@ -8,61 +8,56 @@ const Jetty = require('jetty');
 const jetty = new Jetty(process.stdout);
 
 const argv = require('yargs')
-  .usage('Usage: $0 [options] [host]')
-  .example('$0 -p 45678 10.0.0.12')
+  .usage(`Usage: $0 [options] [host]`)
+  .example(`$0 -p 45678 10.0.0.12`)
   .options({
     'p': {
-      alias: 'port',
+      alias: `port`,
       nargs: 1,
       number: true,
-      describe: 'Port of Teraslice master node',
+      describe: `Port of Teraslice master node`,
       default: 5678,
     },
     't': {
-      alias: 'timeout',
+      alias: `timeout`,
       nargs: 1,
       number: true,
-      describe: 'Time between refresh (seconds)',
+      describe: `Time between refresh (seconds)`,
       default: 2,
     },
   })
   .help('h')
-  .alias('h', 'help')
+  .alias('h', `help`)
   .argv;
 
-const host = argv._[0] || 'localhost';
+const host = argv._[0] || `localhost`;
 const port = argv.p;
-const baseUrl = 'http://' + host + ':' + port;
+const baseUrl = `http://${host}:${port}`;
 
 let requestInterval = argv.t * 1000;  // convert seconds to ms
 
 const sections = {
   'Nodes': {
-    'endpoint': '/txt/nodes',
+    'endpoint': `/txt/nodes`,
     'value': '',
   },
   'Workers': {
-    'endpoint': '/txt/workers',
+    'endpoint': `/txt/workers`,
     'value': '',
   },
   'Slicers': {
-    'endpoint': '/txt/slicers',
+    'endpoint': `/txt/slicers`,
     'value': '',
   },
   'Jobs': {
-    'endpoint': '/txt/jobs',
+    'endpoint': `/txt/jobs`,
     'value': '',
   },
   'Execution Contexts': {
-    'endpoint': '/txt/ex',
+    'endpoint': `/txt/ex`,
     'value': '',
   },
 };
-
-// console.log('Teraslice master: %s:%s', host, port);
-// console.log('Timeoute');
-// console.log(baseUrl + sections['Nodes']);
-// console.log(sections);
 
 /**
  * Generates a Header
@@ -71,16 +66,22 @@ const sections = {
  * @return {string} s The formatted string to be printed to title.
  */
 function makeHeader(title, url) {
-  return '--------------------------------------------------------------------------------\n' +
-         '  ' + title + ' (' + url + ')'+ '\n' +
-         '--------------------------------------------------------------------------------\n\n';
+  return `
+--------------------------------------------------------------------------------
+  ${title} (${url})
+--------------------------------------------------------------------------------
+
+`;
 }
 
 /**
  * Draws the whole screen
  */
 function drawScreen() {
-  jetty.clear();
+  jetty
+    .clear()
+    .moveTo([0, 0]);
+
   let date = new Date();
   for (let section in sections) {
     if (sections.hasOwnProperty(section)) {
@@ -89,7 +90,7 @@ function drawScreen() {
       process.stdout.write(sections[section].value);
     }
   }
-  process.stdout.write('\n\nUpdated at: ' + date + '\n');
+  process.stdout.write(`\nUpdated at: ${date}\n`);
 }
 
 /**
@@ -99,7 +100,7 @@ function drawScreen() {
  */
 function getEndpoint(section, callback) {
   let url = baseUrl + sections[section].endpoint;
-  let newUrl = url + '?size=10';  // restrict response to 10
+  let newUrl = url + `?size=8`;  // limit number of responses
 
   request(newUrl, function(error, response, body) {
     if (!error && response.statusCode == 200) {
