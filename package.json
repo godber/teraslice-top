@@ -22,14 +22,13 @@
     "tstop": "index.js"
   },
   "dependencies": {
-    "blessed": "^0.1.81",
+    "jetty": "^0.2.1",
     "request": "^2.75.0",
     "yargs": "^6.3.0"
   },
   "devDependencies": {
     "eslint": "^3.8.1",
     "eslint-config-google": "^0.7.0",
-    "jsdoc": "^3.4.2",
-    "jshint": "^2.9.4"
+    "jsdoc": "^3.4.2"
   }
 }

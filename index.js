@@ -3,6 +3,9 @@
 'use strict';
 
 const request = require('request');
+const Jetty = require('jetty');
+
+const jetty = new Jetty(process.stdout);
 
 const argv = require('yargs')
   .usage('Usage: $0 [options] [host]')
@@ -19,7 +22,7 @@ const argv = require('yargs')
       alias: 'timeout',
       nargs: 1,
       number: true,
-      describe: 'Timeout between refresh (seconds)',
+      describe: 'Time between refresh (seconds)',
       default: 2,
     },
   })
@@ -31,59 +34,109 @@ const host = argv._[0] || 'localhost';
 const port = argv.p;
 const baseUrl = 'http://' + host + ':' + port;
 
-const endpoints = {
-  'Nodes': '/txt/nodes',
-  'Workers': '/txt/workers',
-  'Slicers': '/txt/slicers',
-  'Jobs': '/txt/jobs',
-  'Execution Contexts': '/txt/ex',
+let requestInterval = argv.t * 2000;
+
+const sections = {
+  'Nodes': {
+    'endpoint': '/txt/nodes',
+    'value': '',
+  },
+  'Workers': {
+    'endpoint': '/txt/workers',
+    'value': '',
+  },
+  'Slicers': {
+    'endpoint': '/txt/slicers',
+    'value': '',
+  },
+  'Jobs': {
+    'endpoint': '/txt/jobs',
+    'value': '',
+  },
+  'Execution Contexts': {
+    'endpoint': '/txt/ex',
+    'value': '',
+  },
 };
 
 // console.log('Teraslice master: %s:%s', host, port);
 // console.log('Timeoute');
-console.log(baseUrl + endpoints['Nodes']);
-// console.log(endpoints);
+// console.log(baseUrl + sections['Nodes']);
+// console.log(sections);
 
 /**
  * Generates a Header
  * @param {string} title Short string representing title of section header.
+ * @param {string} url URL of the API endpoint
  * @return {string} s The formatted string to be printed to title.
  */
-function makeHeader(title) {
+function makeHeader(title, url) {
   return '--------------------------------------------------------------------------------\n' +
-         '  ' + title + '\n' +
+         '  ' + title + ' (' + url + ')'+ '\n' +
          '--------------------------------------------------------------------------------\n\n';
 }
 
-
-console.log(Object.keys(endpoints));
-
-for (let endpoint in endpoints) {
-  if (endpoints.hasOwnProperty(endpoint)) {
-    process.stdout.write(makeHeader(endpoint));
-    let url = baseUrl + endpoints[endpoint];
-    process.stdout.write(url + '\n');
-    console.log(getEndpoint(url));
+/**
+ * Draws the whole screen
+ */
+function drawScreen() {
+  jetty.clear();
+  let date = new Date();
+  for (let section in sections) {
+    if (sections.hasOwnProperty(section)) {
+      let url = baseUrl + sections[section].endpoint;
+      process.stdout.write(makeHeader(section, url));
+      process.stdout.write(sections[section].value);
+    }
   }
+  process.stdout.write('\n\nUpdated at: ' + date + '\n');
 }
 
 /**
  * Retrieves data from the specified endpoint API URL
- * @param  {string} url One of the valid endpoint urls
- * @return {string} s String with the values returned by the API
+ * @param  {string} section Which section are we updating
+ * @param {getEndpointCallback} callback
  */
-function getEndpoint(url) {
+function getEndpoint(section, callback) {
+  let url = baseUrl + sections[section].endpoint;
   let newUrl = url + '?size=10';  // restrict response to 10
-  let r = undefined;
-  console.log(newUrl);
+
   request(newUrl, function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
-      r = body;
+      callback(null, section, body);
     } else {
-      console.log(error);
-      r = '';
+      callback(error, section);
     }
   });
-  return r;
 };
+
+
+/**
+ * Sets the value of the corresponding section to the response body
+ * @param {string} error The error returned from the request
+ * @param {string} section The section the request came from
+ * @param {string} body The body of the response
+ */
+function setValue(error, section, body) {
+  if (error) {
+    // console.log(error);
+    // Null out the value, a common errror is that the server is off
+    sections[section].value = '';
+  } else {
+    sections[section].value = body;
+  }
+};
+
+// Hit all of the endpoints at the requested interval
+for (let section in sections) {
+  if (sections.hasOwnProperty(section)) {
+    getEndpoint(section, setValue);  // hit endpoints once for first run
+    setInterval(function() {
+      getEndpoint(section, setValue);
+    }, requestInterval);   // hit endpoints at interval
+  }
+}
+
+jetty.clear();
+drawScreen();
+setInterval(drawScreen, 2000);
