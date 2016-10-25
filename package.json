@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "docs": "jsdoc -R README.md -P package.json .",
+    "docs": "jsdoc -R README.md -P package.json -r lib/ index.js",
     "clean": "rm -rf out"
   },
   "repository": {
