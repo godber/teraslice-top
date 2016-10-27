@@ -69,9 +69,11 @@ function setValue(error, section, body) {
     // Null out the value, a common errror is that the server is off
     sections[section].value = '';
   } else {
+    if (!body) {
+      body = '';
+    }
     sections[section].value = body;
   }
-  // draw(sections, genUrl(section));
   draw(sections);
 };
 
