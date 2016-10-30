@@ -2,6 +2,7 @@
 
 'use strict';
 
+const Teraslice = require('./lib/teraslice');
 const request = require('./lib/request');
 const draw = require('./lib/draw');
 
@@ -28,34 +29,8 @@ const argv = require('yargs')
   .alias('h', `help`)
   .argv;
 
-const host = argv._[0] || `localhost`;
-const port = argv.p;
-const baseUrl = `http://${host}:${port}`;
-
+let ts = new Teraslice(argv._[0], argv.p);  // host, port
 let requestInterval = argv.t * 1000;  // convert seconds to ms
-
-const sections = {
-  'Nodes': {
-    'endpoint': `/txt/nodes`,
-    'value': '',
-  },
-  'Workers': {
-    'endpoint': `/txt/workers`,
-    'value': '',
-  },
-  'Slicers': {
-    'endpoint': `/txt/slicers`,
-    'value': '',
-  },
-  'Jobs': {
-    'endpoint': `/txt/jobs`,
-    'value': '',
-  },
-  'Execution Contexts': {
-    'endpoint': `/txt/ex`,
-    'value': '',
-  },
-};
 
 /**
  * Sets the value of the corresponding section to the response body
@@ -67,20 +42,20 @@ function setValue(error, section, body) {
   if (error) {
     // console.log(error);
     // Null out the value, a common errror is that the server is off
-    sections[section].value = '';
+    ts.api[section].value = '';
   } else {
     if (!body) {
       body = '';
     }
-    sections[section].value = body;
+    ts.api[section].value = body;
   }
-  draw(sections);
+  draw(ts);
 };
 
 // Hit all of the endpoints at the requested interval
-for (let section in sections) {
-  if (sections.hasOwnProperty(section)) {
-    let url = baseUrl + sections[section].endpoint;
+for (let section in ts.api) {
+  if (ts.api.hasOwnProperty(section)) {
+    let url = ts.url + ts.api[section].endpoint;
 
     request(section, url, setValue);  // once for first run
     setInterval(function() {

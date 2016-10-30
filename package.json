@@ -4,7 +4,7 @@
   "description": "Teraslice Cluster Activity Monitoring Tool",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node node_modules/jasmine/bin/jasmine",
     "lint": "eslint .",
     "docs": "jsdoc -R README.md -P package.json -r lib/ index.js",
     "clean": "rm -rf out"
@@ -19,16 +19,19 @@
   "author": "Austin Godber",
   "license": "BSD-2-Clause",
   "bin": {
-    "ts-top": "index.js"
+    "ts-top": "index.js",
+    "ts-top2": "ts-top2.js"
   },
   "dependencies": {
     "jetty": "^0.2.1",
     "request": "^2.75.0",
+    "request-promise": "^4.1.1",
     "yargs": "^6.3.0"
   },
   "devDependencies": {
     "eslint": "^3.8.1",
     "eslint-config-google": "^0.7.0",
+    "jasmine": "^2.5.2",
     "jsdoc": "^3.4.2"
   }
 }
