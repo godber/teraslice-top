@@ -55,7 +55,7 @@ function setValue(error, section, body) {
 // Hit all of the endpoints at the requested interval
 for (let section in ts.api) {
   if (ts.api.hasOwnProperty(section)) {
-    let url = ts.url + ts.api[section].endpoint;
+    let url = ts.api[section].url;
 
     request(section, url, setValue);  // once for first run
     setInterval(function() {

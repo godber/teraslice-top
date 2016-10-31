@@ -7,13 +7,13 @@ describe('Default Teraslice', function() {
 
   it('has a list of api endpoints accessible at .api', function() {
     expect(typeof ts.api).toBe('object');
-    expect(ts.api.Nodes.endpoint).toBe('/txt/nodes');
+    expect(ts.api['Nodes'].url).toBe('http://localhost:5678/txt/nodes?size=8');
     expect(ts.api.Nodes.value).toBe('');
   });
 
   it('uses localhost as the default host', function() {
     expect(ts.host).toBe('localhost');
-    expect(ts.url).toBe('http://localhost:5678');
+    expect(ts.baseUrl).toBe('http://localhost:5678');
   });
 
   it('can be moified to store the results from the API', function() {
@@ -29,6 +29,7 @@ describe('Custom Teraslice', function() {
 
   it('uses localhost as the default host', function() {
     expect(ts.host).toBe('10.0.0.0');
-    expect(ts.url).toBe('http://10.0.0.0:1234');
+    expect(ts.baseUrl).toBe('http://10.0.0.0:1234');
+    expect(ts.api["Execution Contexts"].url).toBe('http://10.0.0.0:1234/txt/ex?size=8')
   });
 });
