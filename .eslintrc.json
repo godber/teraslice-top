@@ -4,5 +4,8 @@
       "sourceType": "module",
       "semi": "always"
   },
-  "extends": "google"
+  "extends": "google",
+  "rules": {
+    "max-len": ["error", 90]
+  }
 }
