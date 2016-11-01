@@ -2,8 +2,9 @@
 
 'use strict';
 
+const Promise = require('bluebird');
 const Teraslice = require('./lib/teraslice');
-const request = require('./lib/request');
+const request = require('request-promise');
 const draw = require('./lib/draw');
 
 const argv = require('yargs')
@@ -32,34 +33,44 @@ const argv = require('yargs')
 let ts = new Teraslice(argv._[0], argv.p);  // host, port
 let requestInterval = argv.t * 1000;  // convert seconds to ms
 
-/**
- * Sets the value of the corresponding section to the response body
- * @param {string} error The error returned from the request
- * @param {string} section The section the request came from
- * @param {string} body The body of the response
- */
-function setValue(error, section, body) {
-  if (error) {
-    // console.log(error);
-    // Null out the value, a common errror is that the server is off
-    ts.api[section].value = '';
-  } else {
-    if (!body) {
-      body = '';
+const sections = ['Nodes', 'Workers', 'Slicers', 'Jobs', 'Execution Contexts'];
+
+setInterval(function() {
+  Promise.map(sections, function(section) {
+    // request info from all API endpoints
+    return request({
+      uri: ts.api[section].url,
+      resolveWithFullResponse: true, // we want the full response, not just body
+      simple: false,  // promise not rejected in case of 404, handle 404s manually
+    });
+  }).then(function(responses) {
+    // populate the ts.api[section].value fields
+    for (let i = 0; i < responses.length; i++) {
+      handleResponse(sections[i], responses[i]);
     }
-    ts.api[section].value = body;
-  }
-  draw(ts);
-};
+    return;
+  }).then(function() {
+    draw(ts);
+  }).catch(function(e) {
+    console.error(`Error: ${e}`);
+  });
+}, requestInterval); // draw screen at interval
 
-// Hit all of the endpoints at the requested interval
-for (let section in ts.api) {
-  if (ts.api.hasOwnProperty(section)) {
-    let url = ts.api[section].url;
-
-    request(section, url, setValue);  // once for first run
-    setInterval(function() {
-      request(section, url, setValue);
-    }, requestInterval);   // hit endpoints at interval
-  }
+/**
+ * This function processes responses from the API request and sets values in ts
+ * @param  {string} section  One of the API endpoint/section titles
+ * @param  {object} response Response object from the request-promise library
+ */
+function handleResponse(section, response) {
+  if (response.statusCode == 200) {
+    if (!response.body) {
+      ts.api[section].value = '';
+    } else {
+      ts.api[section].value = response.body;
+    }
+  } else if (response.statusCode == 404) {
+    ts.api[section].value = 'Section unavailable';
+  } else {
+    ts.api[section].value = 'Unexpected Response';
+  };
 }
