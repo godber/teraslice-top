@@ -30,6 +30,6 @@ describe('Custom Teraslice', function() {
   it('uses localhost as the default host', function() {
     expect(ts.host).toBe('10.0.0.0');
     expect(ts.baseUrl).toBe('http://10.0.0.0:1234');
-    expect(ts.api["Execution Contexts"].url).toBe('http://10.0.0.0:1234/txt/ex?size=8')
+    expect(ts.api['Execution Contexts'].url).toBe('http://10.0.0.0:1234/txt/ex?size=8');
   });
 });
