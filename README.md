@@ -3,6 +3,8 @@
 Simple top-like tool for monitoring a [Teraslice](https://github.com/terascope/teraslice)
 cluster.
 
+[![Build Status](https://travis-ci.org/godber/teraslice-top.svg?branch=master)](https://travis-ci.org/godber/teraslice-top)
+
 This currently only has basic functionality of showing Teraslice Nodes, Workers,
 Slicers, Jobs and Execution Contexts.  There is not much in the way of
 configuration yet.  You will have to resize your screen to see all of the
