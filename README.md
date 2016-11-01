@@ -1,4 +1,4 @@
-# Teraslice Top (tstop)
+# Teraslice Top (ts-top)
 
 Simple top-like tool for monitoring a [Teraslice](https://github.com/terascope/teraslice)
 cluster.
