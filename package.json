@@ -19,8 +19,7 @@
   "author": "Austin Godber",
   "license": "BSD-2-Clause",
   "bin": {
-    "ts-top": "index.js",
-    "ts-top2": "ts-top2.js"
+    "ts-top": "index.js"
   },
   "dependencies": {
     "jetty": "^0.2.1",
