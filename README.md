@@ -12,10 +12,10 @@ output and use `Ctrl+C` to exit it at this point.
 
 # Installation
 
-It can be installed directly from github using the following command:
+It can be installed using the following command:
 
 ```
-npm install godber/teraslice-top
+npm install -g teraslice-top
 ```
 
 # Usage information
@@ -29,6 +29,9 @@ Options:
   -h, --help     Show help                                             [boolean]
 
 Examples:
+  # Run ts-top on the teraslice master running on localhost:5678
+  ts-top
+  # Run ts-top on the teraslice master running on 10.0.0.12:45678
   ts-top -p 45678 10.0.0.12
 ```
 
