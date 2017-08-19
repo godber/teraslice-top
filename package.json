@@ -9,7 +9,7 @@
         "docs": "jsdoc -R README.md -P package.json -r lib/ index.js",
         "clean": "rm -rf out",
         "clean-all": "rm -rf out node_modules",
-        "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+        "semantic-release": "semantic-release pre && npm publish --tag dev && semantic-release post",
         "style": "standard --env jasmine --verbose | snazzy || true"
     },
     "repository": {
