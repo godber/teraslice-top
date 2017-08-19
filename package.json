@@ -4,11 +4,13 @@
     "description": "Teraslice Cluster Activity Monitoring Tool",
     "main": "index.js",
     "scripts": {
-        "test": "node node_modules/jasmine/bin/jasmine",
+        "test": "standard --env jasmine && node node_modules/.bin/jasmine",
         "lint": "eslint .",
         "docs": "jsdoc -R README.md -P package.json -r lib/ index.js",
         "clean": "rm -rf out",
-        "semantic-release": "semantic-release pre && npm publish --tag dev && semantic-release post"
+        "clean-all": "rm -rf out node_modules",
+        "semantic-release": "semantic-release pre && npm publish --tag dev && semantic-release post",
+        "style": "standard --env jasmine --verbose | snazzy || true"
     },
     "repository": {
         "type": "git",
@@ -29,10 +31,9 @@
         "yargs": "^6.3.0"
     },
     "devDependencies": {
-        "eslint": "^3.8.1",
-        "eslint-config-google": "^0.7.0",
         "jasmine": "^2.5.2",
         "jsdoc": "^3.4.2",
-        "semantic-release": "^7.0.2"
+        "semantic-release": "^7.0.2",
+        "standard": "^10.0.3"
     }
 }
