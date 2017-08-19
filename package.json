@@ -28,7 +28,7 @@
         "jetty": "^0.2.1",
         "request": "^2.75.0",
         "request-promise": "^4.1.1",
-        "yargs": "^6.3.0"
+        "yargs": "^8.0.2"
     },
     "devDependencies": {
         "jasmine": "^2.5.2",
