@@ -25,6 +25,7 @@
         "ts-top": "index.js"
     },
     "dependencies": {
+        "bluebird": "^3.5.0",
         "jetty": "^0.2.1",
         "request": "^2.75.0",
         "request-promise": "^4.1.1",
@@ -37,6 +38,6 @@
         "standard": "^10.0.3"
     },
     "publishConfig": {
-      "tag": "dev"
+        "tag": "dev"
     }
 }
