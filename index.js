@@ -33,7 +33,7 @@ const argv = require('yargs')
 let ts = new Teraslice(argv._[0], argv.p) // host, port
 let requestInterval = argv.t * 1000 // convert seconds to ms
 
-const sections = ['Nodes', 'Workers', 'Slicers', 'Jobs', 'Execution Contexts']
+const sections = ['Nodes', 'Workers', 'Controllers', 'Jobs', 'Execution Contexts']
 
 setInterval(function () {
   Promise.map(sections, function (section) {

@@ -29,12 +29,12 @@
         "jetty": "^0.2.1",
         "request": "^2.75.0",
         "request-promise": "^4.1.1",
-        "yargs": "^8.0.2"
+        "yargs": "^15.1.0"
     },
     "devDependencies": {
         "jasmine": "^2.5.2",
-        "jsdoc": "^3.4.2",
-        "semantic-release": "^7.0.2",
+        "jsdoc": "^3.6.3",
+        "semantic-release": "^15.14.0",
         "standard": "^10.0.3"
     },
     "publishConfig": {
