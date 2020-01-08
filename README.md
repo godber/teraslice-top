@@ -10,17 +10,17 @@ Slicers, Jobs and Execution Contexts.  There is not much in the way of control
 or configuration yet.  You will have to resize your screen to see all of the
 output and use `Ctrl+C` to exit it at this point.
 
-# Installation
+## Installation
 
 It can be installed using the following command:
 
-```
+```bash
 npm install -g teraslice-top
 ```
 
-# Usage information
+## Usage information
 
-```
+```bash
 Usage: ts-top [options] [host]
 
 Options:
@@ -35,7 +35,7 @@ Examples:
   ts-top -p 45678 10.0.0.12
 ```
 
-# Examples
+## Examples
 
 Running `ts-top` will result in a screen similar to that shown below:
 
